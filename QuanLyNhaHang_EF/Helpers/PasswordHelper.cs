@@ -9,7 +9,6 @@ namespace QuanLyNhaHang_EF.Helpers
 {
     public static class PasswordHelper
     {
-        // Hash mật khẩu bằng SHA256
         public static string hashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -23,8 +22,6 @@ namespace QuanLyNhaHang_EF.Helpers
                 return sb.ToString();
             }
         }
-
-        // So sánh mật khẩu nhập vào với hash trong DB
         public static bool verifyPassword(string password, string hashedPassword)
         {
             return hashPassword(password) == hashedPassword;

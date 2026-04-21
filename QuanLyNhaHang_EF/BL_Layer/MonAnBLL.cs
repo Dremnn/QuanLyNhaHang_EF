@@ -141,7 +141,7 @@ namespace QuanLyNhaHang_EF.BL_layer
             if (mon.DanhMucId != 8)
                 return mon.GiaBan;
 
-            List<MonAn> all = getAll(); // Lấy tất cả danh sách bằng hàm getAll() ở trên
+            List<MonAn> all = getAll();
             ComboMonAn comboPattern = null;
 
             if (mon.Id == 28)

@@ -691,16 +691,9 @@ namespace QuanLyNhaHang_EF.Interface_layer.FrmNhanVien
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // 1. Lưu lại ID đơn hàng nhân viên đang xem (nếu có)
             int currentId = selectedDonHangId;
-
-            // 2. Tạm thời ngắt sự kiện SelectionChanged để không bị giật/lag DataGridView chi tiết
             dgvDonHang.SelectionChanged -= dgvDonHang_SelectionChanged;
-
-            // 3. Tải lại dữ liệu mới từ Database
             loadDonHangDangMo();
-
-            // 4. Tìm và bôi đen lại đúng dòng đơn hàng lúc nãy
             if (currentId != -1)
             {
                 bool found = false;
@@ -710,13 +703,11 @@ namespace QuanLyNhaHang_EF.Interface_layer.FrmNhanVien
                     {
                         row.Selected = true;
                         selectedDonHangId = currentId;
-                        loadChiTietDon(currentId); // Load lại danh sách món của đơn đó
+                        loadChiTietDon(currentId);
                         found = true;
                         break;
                     }
                 }
-
-                // Nếu đơn hàng đã bị hoàn thành/hủy và biến mất khỏi danh sách
                 if (!found)
                 {
                     selectedDonHangId = -1;
@@ -724,8 +715,6 @@ namespace QuanLyNhaHang_EF.Interface_layer.FrmNhanVien
                     lblTongTien.Text = "Tổng tiền: 0đ";
                 }
             }
-
-            // 5. Gắn lại sự kiện SelectionChanged
             dgvDonHang.SelectionChanged += dgvDonHang_SelectionChanged;
         }
     }

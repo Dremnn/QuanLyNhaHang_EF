@@ -55,7 +55,7 @@
             // 
             this.lblTenQuan.AutoSize = true;
             this.lblTenQuan.Font = new System.Drawing.Font("Times New Roman", 36F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTenQuan.Location = new System.Drawing.Point(436, 30);
+            this.lblTenQuan.Location = new System.Drawing.Point(401, 30);
             this.lblTenQuan.Name = "lblTenQuan";
             this.lblTenQuan.Size = new System.Drawing.Size(383, 67);
             this.lblTenQuan.TabIndex = 1;
@@ -86,6 +86,7 @@
             // 
             // lvMonAn
             // 
+            this.lvMonAn.HideSelection = false;
             this.lvMonAn.Location = new System.Drawing.Point(4, 115);
             this.lvMonAn.Name = "lvMonAn";
             this.lvMonAn.Size = new System.Drawing.Size(1153, 397);

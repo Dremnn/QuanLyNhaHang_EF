@@ -7,8 +7,6 @@ namespace QuanLyNhaHang.Model
     {
         public string TenCombo { get; set; }
         public decimal PhanTramGiamGia { get; set; }
-
-        // Chứa danh sách các món ăn thật trong Database
         private List<IMonAnComponent> _danhSachMon = new List<IMonAnComponent>();
 
         public ComboMonAn(string tenCombo, decimal phanTramGiamGia)
@@ -26,8 +24,6 @@ namespace QuanLyNhaHang.Model
         {
             return TenCombo;
         }
-
-        // Tự động cộng giá và áp dụng giảm giá 
         public decimal TinhGia()
         {
             decimal tongTienGoc = 0;

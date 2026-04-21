@@ -7,8 +7,6 @@ namespace QuanLyNhaHang_EF.BL_layer
     public class ThanhToanBLL
     {
         private QuanLyNhaHangEntities db = new QuanLyNhaHangEntities();
-
-        // Giữ nguyên tham số truyền vào như code cũ của bạn
         public bool thanhToan(int donHangId, decimal tienGiam, object phuongThuc, string ghiChu)
         {
             foreach (ThanhToan tt in db.ThanhToans)
@@ -39,13 +37,9 @@ namespace QuanLyNhaHang_EF.BL_layer
                 thanhToan.TienGiam = tienGiam;
                 thanhToan.TienThanhToan = tongTien - tienGiam;
                 thanhToan.NgayThanhToan = DateTime.Now;
-
-                // Ép ra chuỗi để tránh lỗi lệch kiểu Enum của Entity Framework
                 if (phuongThuc != null) thanhToan.PhuongThuc = phuongThuc.ToString();
-
                 thanhToan.GhiChu = ghiChu;
-                thanhToan.TrangThai = "ThanhCong"; // Gán cứng chuỗi trạng thái
-
+                thanhToan.TrangThai = "ThanhCong";
                 db.ThanhToans.Add(thanhToan);
 
                 DonHang dh = db.DonHangs.Find(donHangId);
