@@ -215,6 +215,7 @@
     <Compile Include="Model\MonAn.cs">
       <DependentUpon>NhaHangModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\MonAnBanChay.cs" />
     <Compile Include="Model\MonAn_Partial.cs" />
     <Compile Include="Model\NguoiDung.cs">
       <DependentUpon>NhaHangModel.tt</DependentUpon>

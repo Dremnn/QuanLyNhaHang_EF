@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using QuanLyNhaHang_EF.Model;
 using QuanLyNhaHang_EF.Helpers;
 
@@ -7,30 +8,24 @@ namespace QuanLyNhaHang_EF.BL_layer
 {
     public class NguoiDungBLL
     {
-        private QuanLyNhaHangEntities db = new QuanLyNhaHangEntities();
 
         public NguoiDung login(string tenDangNhap, string matKhau)
         {
             if (string.IsNullOrEmpty(tenDangNhap) || string.IsNullOrEmpty(matKhau))
                 return null;
 
-            NguoiDung nguoiDung = null;
-            foreach (NguoiDung nd in db.NguoiDungs)
+            using (var db = new QuanLyNhaHangEntities())
             {
-                if (nd.TenDangNhap == tenDangNhap)
-                {
-                    nguoiDung = nd;
-                    break;
-                }
+                NguoiDung nguoiDung = db.NguoiDungs.FirstOrDefault(nd => nd.TenDangNhap == tenDangNhap);
+
+                if (nguoiDung == null || nguoiDung.HoatDong != true)
+                    return null;
+
+                if (!PasswordHelper.verifyPassword(matKhau, nguoiDung.MatKhau))
+                    return null;
+
+                return nguoiDung;
             }
-
-            if (nguoiDung == null || nguoiDung.HoatDong != true)
-                return null;
-
-            if (!PasswordHelper.verifyPassword(matKhau, nguoiDung.MatKhau))
-                return null;
-
-            return nguoiDung;
         }
 
         public bool dangKy(string tenDangNhap, string matKhau, string hoTen, string soDienThoai)
@@ -39,68 +34,59 @@ namespace QuanLyNhaHang_EF.BL_layer
                 string.IsNullOrEmpty(hoTen) || string.IsNullOrEmpty(soDienThoai))
                 return false;
 
-            foreach (NguoiDung nd in db.NguoiDungs)
+            using (var db = new QuanLyNhaHangEntities())
             {
-                if (nd.TenDangNhap == tenDangNhap) return false;
-            }
+                if (db.NguoiDungs.Any(nd => nd.TenDangNhap == tenDangNhap)) return false;
+                if (db.KhachHangs.Any(kh => kh.SoDienThoai == soDienThoai)) return false;
 
-            foreach (KhachHang kh in db.KhachHangs)
-            {
-                if (kh.SoDienThoai == soDienThoai) return false;
-            }
+                try
+                {
+                    NguoiDung nguoiDung = new NguoiDung();
+                    nguoiDung.TenDangNhap = tenDangNhap;
+                    nguoiDung.MatKhau = PasswordHelper.hashPassword(matKhau);
+                    nguoiDung.VaiTro = VaiTro.KhachHang.ToString();
+                    nguoiDung.HoatDong = true;
+                    nguoiDung.NgayTao = DateTime.Now; 
 
-            try
-            {
-                NguoiDung nguoiDung = new NguoiDung();
-                nguoiDung.TenDangNhap = tenDangNhap;
-                nguoiDung.MatKhau = PasswordHelper.hashPassword(matKhau);
-                nguoiDung.VaiTro = "KhachHang";
-                nguoiDung.HoatDong = true;
+                    db.NguoiDungs.Add(nguoiDung);
+                    db.SaveChanges(); 
 
-                db.NguoiDungs.Add(nguoiDung);
-                db.SaveChanges();
+                    KhachHang khachHang = new KhachHang();
+                    khachHang.HoTen = hoTen;
+                    khachHang.SoDienThoai = soDienThoai;
+                    khachHang.NguoiDungId = nguoiDung.Id; 
 
-                KhachHang khachHang = new KhachHang();
-                khachHang.HoTen = hoTen;
-                khachHang.SoDienThoai = soDienThoai;
-                khachHang.NguoiDungId = nguoiDung.Id;
+                    db.KhachHangs.Add(khachHang);
+                    db.SaveChanges();
 
-                db.KhachHangs.Add(khachHang);
-                db.SaveChanges();
-
-                return true;
-            }
-            catch
-            {
-                return false;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 
         public List<NguoiDung> getAll()
         {
-            List<NguoiDung> list = new List<NguoiDung>();
-            foreach (NguoiDung nd in db.NguoiDungs)
+            using (var db = new QuanLyNhaHangEntities())
             {
-                list.Add(nd);
+                return db.NguoiDungs.OrderBy(nd => nd.VaiTro).ThenBy(nd => nd.TenDangNhap).ToList();
             }
-            return list;
         }
 
         public bool updateHoatDong(int id, bool hoatDong)
         {
-            try
+            using (var db = new QuanLyNhaHangEntities())
             {
-                NguoiDung target = db.NguoiDungs.Find(id);
+                var target = db.NguoiDungs.Find(id);
                 if (target != null)
                 {
                     target.HoatDong = hoatDong;
                     db.SaveChanges();
                     return true;
                 }
-                return false;
-            }
-            catch
-            {
                 return false;
             }
         }
@@ -110,19 +96,15 @@ namespace QuanLyNhaHang_EF.BL_layer
             if (id == SessionHelper.CurrentUser.Id)
                 return false;
 
-            try
+            using (var db = new QuanLyNhaHangEntities())
             {
-                NguoiDung target = db.NguoiDungs.Find(id);
+                var target = db.NguoiDungs.Find(id);
                 if (target != null)
                 {
                     target.VaiTro = vaiTro;
                     db.SaveChanges();
                     return true;
                 }
-                return false;
-            }
-            catch
-            {
                 return false;
             }
         }
@@ -132,21 +114,36 @@ namespace QuanLyNhaHang_EF.BL_layer
             if (id == SessionHelper.CurrentUser.Id)
                 return false;
 
-            try
+            using (var db = new QuanLyNhaHangEntities())
             {
-                NguoiDung target = db.NguoiDungs.Find(id);
-                if (target != null)
+                try
                 {
-                    db.NguoiDungs.Remove(target);
-                    db.SaveChanges();
-                    return true;
+                    var target = db.NguoiDungs.Find(id);
+                    if (target != null)
+                    {
+                        var kh = db.KhachHangs.FirstOrDefault(k => k.NguoiDungId == id);
+                        if (kh != null)
+                        {
+                            db.KhachHangs.Remove(kh);
+                        }
+
+                        db.NguoiDungs.Remove(target);
+                        db.SaveChanges();
+
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
+                catch
+                {
+                    return false;
+                }
             }
-            catch
-            {
-                return false;
-            }
+        }
+
+        public bool xoaTaiKhoan(int id)
+        {
+            return delete(id);
         }
     }
 }

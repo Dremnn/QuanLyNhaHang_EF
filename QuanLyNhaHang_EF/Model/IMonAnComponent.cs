@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QuanLyNhaHang.Model
+namespace QuanLyNhaHang_EF.Model
 {
     public interface IMonAnComponent
     {

@@ -10,6 +10,7 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public KhachHang getByNguoiDungId(int nguoiDungId)
         {
+            db = new QuanLyNhaHangEntities();
             foreach (KhachHang kh in db.KhachHangs)
             {
                 if (kh.NguoiDungId == nguoiDungId)

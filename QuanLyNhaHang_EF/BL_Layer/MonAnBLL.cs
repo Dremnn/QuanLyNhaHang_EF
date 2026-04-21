@@ -1,5 +1,4 @@
-﻿using QuanLyNhaHang.Model;
-using QuanLyNhaHang_EF.Model;
+﻿using QuanLyNhaHang_EF.Model;
 using System;
 using System.Collections.Generic;
 

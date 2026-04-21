@@ -11,23 +11,24 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public List<DonHang> getByKhachHangId(int khachHangId)
         {
+            db = new QuanLyNhaHangEntities();
             List<DonHang> ketQua = new List<DonHang>();
-            foreach (DonHang dh in db.DonHangs)
+            foreach (DonHang dh in db.DonHangs.Include("Ban"))
             {
                 if (dh.KhachHangId == khachHangId)
-                {
                     ketQua.Add(dh);
-                }
             }
             return ketQua;
         }
 
         public List<DonHang> getAllDangMo()
         {
+            db = new QuanLyNhaHangEntities();
             List<DonHang> ketQua = new List<DonHang>();
-            foreach (DonHang dh in db.DonHangs)
+            foreach (DonHang dh in db.DonHangs.Include("Ban").Include("KhachHang"))
             {
-                if (dh.TrangThai != "Đã thanh toán" && dh.TrangThai != "Hủy" && dh.TrangThai != "Đã hủy")
+                if (dh.TrangThai != TrangThaiDonHang.DaThanhToan.ToString() &&
+                    dh.TrangThai != TrangThaiDonHang.Huy.ToString())
                 {
                     ketQua.Add(dh);
                 }
@@ -49,8 +50,7 @@ namespace QuanLyNhaHang_EF.BL_layer
                 }
             }
 
-            if (!banConTrong)
-                return false;
+            if (!banConTrong) return false;
 
             try
             {
@@ -59,12 +59,14 @@ namespace QuanLyNhaHang_EF.BL_layer
                 donHang.KhachHangId = khachHangId;
                 donHang.NguoiDungId = null;
                 donHang.GhiChu = null;
-                donHang.TrangThai = "Mở";
+                donHang.TrangThai = TrangThaiDonHang.ChoDuyet.ToString();
+
+                donHang.NgayTao = DateTime.Now;
 
                 db.DonHangs.Add(donHang);
                 db.SaveChanges();
 
-                banBLL.updateTrangThai(banId, "CoKhach");
+                banBLL.updateTrangThai(banId, TrangThaiBan.CoKhach.ToString());
                 return true;
             }
             catch
@@ -81,18 +83,15 @@ namespace QuanLyNhaHang_EF.BL_layer
                 if (target != null)
                 {
                     int banId = Convert.ToInt32(target.BanId);
-                    target.TrangThai = "Hủy";
+                    target.TrangThai = TrangThaiDonHang.Huy.ToString();
                     db.SaveChanges();
 
-                    banBLL.updateTrangThai(banId, "Trong");
+                    banBLL.updateTrangThai(banId, TrangThaiBan.Trong.ToString());
                     return true;
                 }
                 return false;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
 
         public bool updateTrangThai(int donHangId, string trangThai)
@@ -108,10 +107,7 @@ namespace QuanLyNhaHang_EF.BL_layer
                 }
                 return false;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
     }
 }

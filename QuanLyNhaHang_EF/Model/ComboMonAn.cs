@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace QuanLyNhaHang.Model
+namespace QuanLyNhaHang_EF.Model
 {
     public class ComboMonAn : IMonAnComponent
     {

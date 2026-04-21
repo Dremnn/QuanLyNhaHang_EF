@@ -9,10 +9,12 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public List<Ban> getBanTrong()
         {
+            db = new QuanLyNhaHangEntities();
+
             List<Ban> ketQua = new List<Ban>();
             foreach (Ban ban in db.Bans)
             {
-                if (ban.TrangThai == "Trống" || ban.TrangThai == "Trong")
+                if (ban.TrangThai == TrangThaiBan.Trong.ToString())
                 {
                     ketQua.Add(ban);
                 }

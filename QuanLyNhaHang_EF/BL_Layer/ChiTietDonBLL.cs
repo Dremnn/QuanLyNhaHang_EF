@@ -9,13 +9,12 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public List<ChiTietDon> getByDonHangId(int donHangId)
         {
+            db = new QuanLyNhaHangEntities();  
             List<ChiTietDon> ketQua = new List<ChiTietDon>();
             foreach (ChiTietDon ct in db.ChiTietDons)
             {
                 if (ct.DonHangId == donHangId)
-                {
                     ketQua.Add(ct);
-                }
             }
             return ketQua;
         }
@@ -66,6 +65,7 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public bool xoaMon(int chiTietId)
         {
+            db = new QuanLyNhaHangEntities();
             try
             {
                 ChiTietDon target = db.ChiTietDons.Find(chiTietId);
@@ -106,6 +106,7 @@ namespace QuanLyNhaHang_EF.BL_layer
 
         public decimal tinhTongTien(int donHangId)
         {
+            db = new QuanLyNhaHangEntities();
             decimal tong = 0;
             foreach (ChiTietDon ct in db.ChiTietDons)
             {

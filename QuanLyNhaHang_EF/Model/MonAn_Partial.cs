@@ -1,4 +1,4 @@
-﻿using QuanLyNhaHang.Model;
+﻿using QuanLyNhaHang_EF.Model;
 using System;
 
 namespace QuanLyNhaHang_EF.Model 

@@ -445,6 +445,31 @@ namespace QuanLyNhaHang_EF.Interface_layer.Admin
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void loadMonBanChay(DateTime tuNgay, DateTime denNgay)
+        {
+            dgvMonBanChay.DataSource = null;
+            dgvMonBanChay.Rows.Clear();
+            dgvMonBanChay.Columns.Clear();
+
+            dgvMonBanChay.Columns.Add("colMBCTen", "Tên món");
+            dgvMonBanChay.Columns.Add("colMBCSoLuong", "Số lượng bán");
+            dgvMonBanChay.Columns.Add("colMBCDoanhThu", "Doanh thu");
+
+            List<MonAnBanChay> list = baoCaoBLL.getMonBanChay(tuNgay, denNgay);
+            foreach (MonAnBanChay m in list)
+            {
+                dgvMonBanChay.Rows.Add(
+                    m.TenMon,
+                    m.TongSoLuong,
+                    m.TongDoanhThu.ToString("N0")
+                );
+            }
+
+            dgvMonBanChay.ReadOnly = true;
+            dgvMonBanChay.AllowUserToAddRows = false;
+            dgvMonBanChay.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+        }
         private void btnXemBaoCao_Click(object sender, EventArgs e)
         {
             DateTime tuNgay = dtpTuNgay.Value.Date;
@@ -457,6 +482,7 @@ namespace QuanLyNhaHang_EF.Interface_layer.Admin
             }
 
             loadBaoCaoDoanhThu(tuNgay, denNgay);
+            loadMonBanChay(tuNgay, denNgay);
 
             frmBaoCaoReport frmReport = new frmBaoCaoReport(tuNgay, denNgay);
             frmReport.ShowDialog();

@@ -39,19 +39,20 @@ namespace QuanLyNhaHang_EF.BL_layer
                 thanhToan.NgayThanhToan = DateTime.Now;
                 if (phuongThuc != null) thanhToan.PhuongThuc = phuongThuc.ToString();
                 thanhToan.GhiChu = ghiChu;
-                thanhToan.TrangThai = "ThanhCong";
+
+                thanhToan.TrangThai = TrangThaiThanhToan.ThanhCong.ToString();
                 db.ThanhToans.Add(thanhToan);
 
                 DonHang dh = db.DonHangs.Find(donHangId);
                 if (dh != null)
                 {
-                    dh.TrangThai = "DaThanhToan";
+                    dh.TrangThai = TrangThaiDonHang.DaThanhToan.ToString();
 
                     int banId = Convert.ToInt32(dh.BanId);
                     Ban ban = db.Bans.Find(banId);
                     if (ban != null)
                     {
-                        ban.TrangThai = "Trong";
+                        ban.TrangThai = TrangThaiBan.Trong.ToString();
                     }
                 }
 
